@@ -37,6 +37,133 @@
           }
         }
       }
+    },
+    "parts-tester": {
+      "root": "projects/parts-tester/",
+      "sourceRoot": "projects/parts-tester/src",
+      "projectType": "application",
+      "prefix": "app",
+      "schematics": {},
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/parts-tester",
+            "index": "projects/parts-tester/src/index.html",
+            "main": "projects/parts-tester/src/main.ts",
+            "polyfills": "projects/parts-tester/src/polyfills.ts",
+            "tsConfig": "projects/parts-tester/tsconfig.app.json",
+            "assets": [
+              "projects/parts-tester/src/favicon.ico",
+              "projects/parts-tester/src/assets"
+            ],
+            "styles": [
+              "projects/parts-tester/src/styles.css"
+            ],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "projects/parts-tester/src/environments/environment.ts",
+                  "with": "projects/parts-tester/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "parts-tester:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "parts-tester:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "parts-tester:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/parts-tester/src/test.ts",
+            "polyfills": "projects/parts-tester/src/polyfills.ts",
+            "tsConfig": "projects/parts-tester/tsconfig.spec.json",
+            "karmaConfig": "projects/parts-tester/karma.conf.js",
+            "styles": [
+              "projects/parts-tester/src/styles.css"
+            ],
+            "scripts": [],
+            "assets": [
+              "projects/parts-tester/src/favicon.ico",
+              "projects/parts-tester/src/assets"
+            ]
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/parts-tester/tsconfig.app.json",
+              "projects/parts-tester/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
+    "parts-tester-e2e": {
+      "root": "projects/parts-tester-e2e/",
+      "projectType": "application",
+      "prefix": "",
+      "architect": {
+        "e2e": {
+          "builder": "@angular-devkit/build-angular:protractor",
+          "options": {
+            "protractorConfig": "projects/parts-tester-e2e/protractor.conf.js",
+            "devServerTarget": "parts-tester:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "parts-tester:serve:production"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": "projects/parts-tester-e2e/tsconfig.e2e.json",
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
     }
   },
   "defaultProject": "parts"
