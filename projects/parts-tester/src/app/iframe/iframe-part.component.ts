@@ -12,6 +12,7 @@ export class IframePartComponent implements Stateful<IframeState> {
   src: SafeResourceUrl;
 
   constructor(private sanitizer: DomSanitizer) {}
+
   setState(state: IframeState) {
     this.state = state;
     this.src = this.sanitizer.bypassSecurityTrustResourceUrl(this.state.src);

@@ -1,12 +1,12 @@
 import {
-  Injectable,
-  Inject,
+  ComponentFactory,
   ComponentFactoryResolver,
-  ViewContainerRef,
-  ComponentFactory
+  Inject,
+  Injectable,
+  ViewContainerRef
 } from '@angular/core';
-import { PartRegistration, PART_REGISTRATIONS } from './part-registration';
 import { Part } from './part';
+import { PartRegistration, PART_REGISTRATIONS } from './part-registration';
 
 @Injectable({
   providedIn: 'root'

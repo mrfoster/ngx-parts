@@ -1,13 +1,13 @@
 import {
   Component,
   Input,
-  ViewContainerRef,
-  ViewChild,
   OnChanges,
-  SimpleChanges
+  SimpleChanges,
+  ViewChild,
+  ViewContainerRef
 } from '@angular/core';
-import { PartsRenderer } from './parts.renderer';
 import { Part } from './part';
+import { PartsRenderer } from './parts.renderer';
 
 @Component({
   selector: 'lib-part-container',

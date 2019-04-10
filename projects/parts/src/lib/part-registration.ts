@@ -1,4 +1,4 @@
-import { Type, InjectionToken } from '@angular/core';
+import { InjectionToken, Type } from '@angular/core';
 export const PART_REGISTRATIONS = new InjectionToken<PartRegistration[]>(
   'part.registrations'
 );

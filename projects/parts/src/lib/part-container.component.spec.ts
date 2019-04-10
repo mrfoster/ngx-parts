@@ -1,6 +1,56 @@
+import { Component, NgModule, SimpleChange } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { Part } from './part';
 import { PartContainerComponent } from './part-container.component';
 import { PART_REGISTRATIONS } from './part-registration';
+import { Stateful } from './stateful';
+
+@Component({
+  selector: 'lib-test',
+  template: '<h1>Lets party!</h1>'
+})
+class TestComponent {}
+
+@Component({
+  selector: 'lib-test-stateful',
+  template: '<h1>{{state.title}}</h1>'
+})
+class TestStatefulComponent implements Stateful<any> {
+  state: any;
+
+  setState(value: any) {
+    this.state = value;
+  }
+}
+const components = [TestComponent, TestStatefulComponent];
+
+// NgModule required due to https://github.com/angular/angular/issues/10760
+@NgModule({
+  declarations: [components],
+  entryComponents: [components],
+  exports: [components],
+  providers: [
+    {
+      provide: PART_REGISTRATIONS,
+      useValue: {
+        name: 'lib-test',
+        displayName: 'Test Component',
+        type: TestComponent
+      },
+      multi: true
+    },
+    {
+      provide: PART_REGISTRATIONS,
+      useValue: {
+        name: 'lib-test-stateful',
+        displayName: 'Test Stateful Component',
+        type: TestStatefulComponent
+      },
+      multi: true
+    }
+  ]
+})
+class TestModule {}
 
 describe('PartContainerComponent', () => {
   let component: PartContainerComponent;
@@ -113,55 +163,3 @@ describe('PartContainerComponent', () => {
     expect(container.textContent).toEqual('');
   });
 });
-
-import { NgModule, Component, SimpleChange } from '@angular/core';
-import { Stateful } from './stateful';
-import { Part } from './part';
-
-@Component({
-  selector: 'lib-test',
-  template: '<h1>Lets party!</h1>'
-})
-class TestComponent {}
-
-@Component({
-  selector: 'lib-test-stateful',
-  template: '<h1>{{state.title}}</h1>'
-})
-class TestStatefulComponent implements Stateful<any> {
-  state: any;
-
-  setState(value: any) {
-    this.state = value;
-  }
-}
-
-const components = [TestComponent, TestStatefulComponent];
-
-// NgModule required due to https://github.com/angular/angular/issues/10760
-@NgModule({
-  declarations: [components],
-  entryComponents: [components],
-  exports: [components],
-  providers: [
-    {
-      provide: PART_REGISTRATIONS,
-      useValue: {
-        name: 'lib-test',
-        displayName: 'Test Component',
-        type: TestComponent
-      },
-      multi: true
-    },
-    {
-      provide: PART_REGISTRATIONS,
-      useValue: {
-        name: 'lib-test-stateful',
-        displayName: 'Test Stateful Component',
-        type: TestStatefulComponent
-      },
-      multi: true
-    }
-  ]
-})
-class TestModule {}
