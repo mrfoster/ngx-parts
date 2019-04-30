@@ -23,9 +23,9 @@ export class PartsRenderer {
     }, {});
   }
 
-  public render(parent: ViewContainerRef, parts: Part[]) {
+  public renderParts(host: ViewContainerRef, parts: Part[]) {
     // TODO: Detect changes and only render what is necessary?
-    parent.clear();
+    host.clear();
     parts
       .map(p => ({
         factory: this.partsFactory[p.type],
@@ -33,10 +33,24 @@ export class PartsRenderer {
       }))
       .filter(p => p.factory)
       .forEach(p => {
-        const component = parent.createComponent(p.factory);
+        const component = host.createComponent(p.factory);
         if ('setState' in component.instance) {
           component.instance.setState(JSON.parse(p.part.state));
         }
       });
+  }
+
+  public renderPart(host: ViewContainerRef, part: Part) {
+    const factory = this.partsFactory[part.type];
+    if (!factory) {
+      return;
+    }
+
+    const component = host.createComponent(factory);
+
+    // this.renderer2.addClass(compRef.location.elementRef, 'dynamicClass')
+    if ('setState' in component.instance) {
+      component.instance.setState(JSON.parse(part.state));
+    }
   }
 }

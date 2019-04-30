@@ -1,0 +1,13 @@
+.main {
+  width: 80%;
+  float: left;
+}
+
+.aside {
+  width: 20%;
+  float: right;
+}
+
+.footer {
+  clear: both;
+}

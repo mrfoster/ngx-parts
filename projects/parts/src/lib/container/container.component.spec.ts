@@ -1,18 +1,18 @@
 import { Component, NgModule, SimpleChange } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Part } from './part';
-import { PartContainerComponent } from './part-container.component';
-import { PART_REGISTRATIONS } from './part-registration';
-import { Stateful } from './stateful';
+import { Part } from '../part';
+import { PART_REGISTRATIONS } from '../part-registration';
+import { Stateful } from '../stateful';
+import { ContainerComponent } from './container.component';
 
 @Component({
-  selector: 'lib-test',
+  selector: 'part-test',
   template: '<h1>Lets party!</h1>'
 })
 class TestComponent {}
 
 @Component({
-  selector: 'lib-test-stateful',
+  selector: 'part-test-stateful',
   template: '<h1>{{state.title}}</h1>'
 })
 class TestStatefulComponent implements Stateful<any> {
@@ -33,7 +33,7 @@ const components = [TestComponent, TestStatefulComponent];
     {
       provide: PART_REGISTRATIONS,
       useValue: {
-        name: 'lib-test',
+        name: 'part-test',
         displayName: 'Test Component',
         type: TestComponent
       },
@@ -42,7 +42,7 @@ const components = [TestComponent, TestStatefulComponent];
     {
       provide: PART_REGISTRATIONS,
       useValue: {
-        name: 'lib-test-stateful',
+        name: 'part-test-stateful',
         displayName: 'Test Stateful Component',
         type: TestStatefulComponent
       },
@@ -52,9 +52,9 @@ const components = [TestComponent, TestStatefulComponent];
 })
 class TestModule {}
 
-describe('PartContainerComponent', () => {
-  let component: PartContainerComponent;
-  let fixture: ComponentFixture<PartContainerComponent>;
+describe('ContainerComponent', () => {
+  let component: ContainerComponent;
+  let fixture: ComponentFixture<ContainerComponent>;
   let container: HTMLElement;
 
   const createTestPart = (type: string, state: any = null): Part => ({
@@ -68,12 +68,12 @@ describe('PartContainerComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [TestModule],
-      declarations: [PartContainerComponent]
+      declarations: [ContainerComponent]
     }).compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PartContainerComponent);
+    fixture = TestBed.createComponent(ContainerComponent);
     component = fixture.componentInstance;
     container = fixture.nativeElement;
     fixture.detectChanges();

@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, Inject } from '@angular/core';
+import { PartsService, PARTS_SERVICE } from 'parts';
+import { v4 } from 'uuid';
 
 @Component({
   selector: 'app-root',
@@ -6,24 +8,32 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  parts = [
-    {
-      id: 'd69ac579-276a-454c-9cca-b90dadc206a5',
-      group: 'home',
+  editable = false;
+  constructor(@Inject(PARTS_SERVICE) private partsService: PartsService) {}
+
+  addContentPart() {
+    this.partsService.add({
+      id: v4(),
+      group: 'main',
       type: 'app-content-part',
       index: 0,
       state: `{
-        "content": "<h1>Title</h1>"
+        "content": "<h1>Test</h1>"
       }`
-    },
-    {
-      id: 'b58263f1-4b8e-466b-b701-76d6d284f914',
-      group: 'home',
-      type: 'app-iframe-part',
+    });
+  }
+
+  addTimerPart() {
+    this.partsService.add({
+      id: v4(),
+      group: 'aside',
+      type: 'app-timer-part',
       index: 0,
-      state: `{
-        "src": "https://www.youtube.com/embed/TcMBFSGVi1c"
-      }`
-    }
-  ];
+      state: ''
+    });
+  }
+
+  toggleEdit() {
+    this.editable = !this.editable;
+  }
 }

@@ -1,0 +1,23 @@
+<ng-container *ngIf="editable">
+  <div
+    class="part-list"
+    cdkDropList
+    [cdkDropListData]="parts | async"
+    (cdkDropListDropped)="drop($event)"
+  >
+    <div
+      class="part-item"
+      *ngFor="let part of parts | async; trackBy: trackById"
+      cdkDrag
+    >
+      <ng-container [partPart]="part"></ng-container>
+    </div>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="!editable">
+  <ng-container
+    *ngFor="let part of parts | async; trackBy: trackById"
+    [partPart]="part"
+  ></ng-container>
+</ng-container>
