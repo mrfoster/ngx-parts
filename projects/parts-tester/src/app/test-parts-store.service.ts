@@ -1,12 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Part } from 'parts/lib/part';
-import { PartsService } from 'parts/ngx-parts';
-import { BehaviorSubject, Observable, of } from 'rxjs';
+import { PartsService, PartsStore } from 'parts';
+import { Observable, of } from 'rxjs';
 
-@Injectable({
-  providedIn: 'root'
-})
-export class TestPartsService implements PartsService {
+@Injectable()
+export class TestPartsStore implements PartsStore {
   private data = [
     {
       id: 'd69ac579-276a-454c-9cca-b90dadc206a5',
@@ -27,12 +24,20 @@ export class TestPartsService implements PartsService {
       }`
     },
     {
-      id: '00e53562-8215-452d-8fe5-89fbdd5db6aa',
+      id: 'e0b36189-6e97-4cf1-ac59-1e24826bde27',
+      group: 'nav',
+      type: 'app-timer-part',
+      index: 0,
+      state: null
+    },
+    {
+      id: 'd59f4f82-b15d-4eb9-b371-f8ff0e47f85b',
       group: 'main',
-      type: 'app-iframe-part',
+      type: 'app-test-part',
       index: 1,
       state: `{
-        "src": "https://www.youtube.com/embed/TcMBFSGVi1c"
+        "title": "Title",
+        "subTitle": "Sub Title"
       }`
     },
     {
@@ -55,32 +60,8 @@ export class TestPartsService implements PartsService {
     }
   ];
 
-  private currentParts = [];
-  private part$ = new BehaviorSubject<Part[]>(this.currentParts);
-  readonly parts = this.part$.asObservable();
-
-  private updateParts(parts: Part[]) {
-    this.currentParts = parts;
-    this.part$.next(this.currentParts);
-  }
-
-  add(part: Part): void {
-    this.updateParts([...this.currentParts, part]);
-  }
-
-  update(part: Part): void {
-    this.updateParts([
-      ...this.currentParts.filter(p => p.id !== part.id),
-      part
-    ]);
-  }
-
-  remove(part: Part): void {
-    this.updateParts(this.currentParts.filter(p => p.id !== part.id));
-  }
-
   load(groups: string[]): Observable<void> {
-    this.updateParts(this.data);
+    this.partsService.currentParts = this.data;
     return of(null);
   }
 
@@ -88,5 +69,5 @@ export class TestPartsService implements PartsService {
     throw new Error('Method not implemented.');
   }
 
-  constructor() {}
+  constructor(private partsService: PartsService) {}
 }

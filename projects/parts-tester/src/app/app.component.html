@@ -1,39 +1,33 @@
-<button (click)="toggleEdit()">
-  <ng-container *ngIf="!editable">Edit</ng-container>
-  <ng-container *ngIf="editable">Preview</ng-container>
+<button *ngIf="!(editing | async)" (click)="toggleEdit()">
+  Edit
 </button>
 
-<ng-container *ngIf="editable">
+<ng-container *ngIf="editing | async">
+  <button (click)="toggleEdit()">Save</button>
+  <button (click)="toggleEdit()">Cancel</button>
+
   <button (click)="addContentPart()">Add Content</button>
   <button (click)="addTimerPart()">Add Timer</button>
 </ng-container>
 
-<div cdkDropListGroup>
+<div cdkDropListGroup class="page">
   <header class="header">
-    <part-observable-container
-      group="header"
-      [editable]="editable"
-    ></part-observable-container>
+    <part-container group="header"></part-container>
   </header>
 
+  <nav class="nav">
+    <part-container group="nav"></part-container>
+  </nav>
+
   <main class="main">
-    <part-observable-container
-      group="main"
-      [editable]="editable"
-    ></part-observable-container>
+    <part-container group="main"></part-container>
   </main>
 
   <aside class="aside">
-    <part-observable-container
-      group="aside"
-      [editable]="editable"
-    ></part-observable-container>
+    <part-container group="aside"></part-container>
   </aside>
 
   <footer class="footer">
-    <part-observable-container
-      group="footer"
-      [editable]="editable"
-    ></part-observable-container>
+    <part-container group="footer"></part-container>
   </footer>
 </div>

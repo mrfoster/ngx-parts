@@ -1,34 +1,81 @@
 import {
-  Component,
-  Input,
-  OnChanges,
-  SimpleChanges,
-  ViewChild,
-  ViewContainerRef
-} from '@angular/core';
+  CdkDragDrop,
+  moveItemInArray,
+  transferArrayItem
+} from '@angular/cdk/drag-drop';
+import { Component, Inject, Input, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { Part } from '../part';
-import { PartsRenderer } from '../parts.renderer';
+import { PartsService } from '../parts.service';
+import { PartsStore, PARTS_STORE } from '../parts.store';
 
 @Component({
   selector: 'part-container',
-  template: `
-    <ng-container #container></ng-container>
-  `
+  templateUrl: './container.component.html',
+  styleUrls: ['./container.component.css']
 })
-export class ContainerComponent implements OnChanges {
-  @Input()
-  parts: Part[];
+export class ContainerComponent implements OnInit {
+  @Input() group: string;
 
-  @ViewChild('container', { read: ViewContainerRef })
-  private container: ViewContainerRef;
+  parts: Observable<Part[]>;
+  editing: Observable<boolean>;
 
-  constructor(private partsRenderer: PartsRenderer) {}
+  constructor(
+    @Inject(PARTS_STORE) private partsStore: PartsStore,
+    private partsService: PartsService
+  ) {
+    this.editing = partsService.editing;
+  }
 
-  ngOnChanges(changes: SimpleChanges) {
-    // TODO: check if changed
+  ngOnInit() {
+    this.parts = this.partsService.parts.pipe(
+      map(parts =>
+        parts
+          .filter(part => part.group === this.group)
+          .sort((a, b) => a.index - b.index)
+      )
+    );
 
-    if (changes.parts && changes.parts.currentValue) {
-      this.partsRenderer.renderParts(this.container, this.parts);
+    this.partsStore.load([this.group]);
+  }
+
+  trackById(index, item) {
+    return item.id;
+  }
+
+  drop(event: CdkDragDrop<Part[]>) {
+    const updatePartIndexes = (parts: Part[]) => {
+      parts.forEach((part, index) => {
+        part.index = index;
+      });
+    };
+
+    if (event.previousContainer === event.container) {
+      if (event.currentIndex === event.previousIndex) {
+        return;
+      }
+
+      moveItemInArray(
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex
+      );
+
+      updatePartIndexes(event.container.data);
+      this.partsService.currentParts = [...this.partsService.currentParts];
+    } else {
+      transferArrayItem(
+        event.previousContainer.data,
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex
+      );
+
+      updatePartIndexes(event.container.data);
+      updatePartIndexes(event.previousContainer.data);
+      event.container.data[event.currentIndex].group = this.group;
+      this.partsService.currentParts = [...this.partsService.currentParts];
     }
   }
 }

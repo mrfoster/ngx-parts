@@ -1,1 +1,15 @@
-<pre>{{ state.data | json }}</pre>
+<!-- <header *ngIf="active">
+  <button *ngIf="canRemove" (click)="remove()">Remove</button>
+  <button *ngIf="canEdit" (click)="edit()">Edit</button>
+</header> -->
+
+<button (click)="remove()">Remove</button>
+
+<dl>
+  <dt>Set count</dt>
+  <dd>{{ setCount }}</dd>
+  <dt>Check count</dt>
+  <dd>{{ checkCount }}</dd>
+</dl>
+
+<pre>{{ state | json }}</pre>

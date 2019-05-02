@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { PartRegistration, Stateful } from 'parts';
-import { IframeState } from './iframe-state';
 
 @Component({
   selector: 'app-iframe-part',
@@ -24,3 +23,7 @@ export const IframePartRegistration: PartRegistration = {
   name: 'app-iframe-part',
   type: IframePartComponent
 };
+
+export class IframeState {
+  src: string;
+}

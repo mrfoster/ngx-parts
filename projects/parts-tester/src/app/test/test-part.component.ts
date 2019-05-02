@@ -1,16 +1,41 @@
-import { Component, OnInit } from '@angular/core';
-import { PartRegistration } from 'projects/parts/src/public_api';
-import { TestState } from './test-state';
+import { ChangeDetectionStrategy, Component, DoCheck } from '@angular/core';
+import { Identifiable, PartRegistration, PartsService, Stateful } from 'parts';
 
 @Component({
   selector: 'app-test-part',
-  templateUrl: './test-part.component.html'
+  templateUrl: './test-part.component.html',
+  styles: [
+    `
+      :host:before,
+      :host:after {
+        content: ' ';
+        display: table;
+      }
+    `
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TestPartComponent implements OnInit {
-  state: TestState;
-  constructor() {}
+export class TestPartComponent implements Stateful<any>, Identifiable, DoCheck {
+  constructor(private partsService: PartsService) {}
+  id: string;
+  canEdit: boolean;
 
-  ngOnInit() {}
+  state: any;
+  setCount = 0;
+  checkCount = 0;
+
+  setState(state: any) {
+    this.setCount += 1;
+    this.state = state;
+  }
+
+  remove() {
+    this.partsService.remove(this.id);
+  }
+
+  ngDoCheck(): void {
+    this.checkCount += 1;
+  }
 }
 
 export const TestPartRegistration: PartRegistration = {

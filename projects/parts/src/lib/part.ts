@@ -1,7 +1,7 @@
 export interface Part {
-  id: string;
+  readonly id: string;
+  readonly type: string;
   group: string;
-  type: string;
   state: string;
   index: number;
 }

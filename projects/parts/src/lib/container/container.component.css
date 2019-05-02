@@ -1,3 +1,7 @@
+.part-list {
+  min-height: 1em;
+}
+
 .part-item {
   outline: 1px dashed #ccc;
 }

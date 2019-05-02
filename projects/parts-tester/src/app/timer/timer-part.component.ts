@@ -4,7 +4,8 @@ import { interval } from 'rxjs';
 
 @Component({
   selector: 'app-timer-part',
-  templateUrl: './timer-part.component.html'
+  templateUrl: './timer-part.component.html',
+  styleUrls: ['./timer-part.component.css']
 })
 export class TimerPartComponent {
   time = 0;

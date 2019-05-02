@@ -1,19 +1,35 @@
-import { Directive, Input, OnInit, ViewContainerRef } from '@angular/core';
+import {
+  ComponentRef,
+  Directive,
+  Input,
+  OnDestroy,
+  OnInit,
+  ViewContainerRef
+} from '@angular/core';
 import { Part } from './part';
-import { PartsRenderer } from './parts.renderer';
+import { PartsFactory } from './parts-factory.service';
 
 @Directive({
   selector: '[partPart]'
 })
-export class PartDirective implements OnInit {
+export class PartDirective implements OnInit, OnDestroy {
+  private componentRef: ComponentRef<any>;
+
   constructor(
     private viewContainerRef: ViewContainerRef,
-    private partsRenderer: PartsRenderer
+    private partsFactory: PartsFactory
   ) {}
 
   @Input('partPart') part: Part;
 
   ngOnInit(): void {
-    this.partsRenderer.renderPart(this.viewContainerRef, this.part);
+    this.componentRef = this.partsFactory.createComponent(
+      this.viewContainerRef,
+      this.part
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.componentRef.destroy();
   }
 }

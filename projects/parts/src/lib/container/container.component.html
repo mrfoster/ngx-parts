@@ -1,4 +1,4 @@
-<ng-container *ngIf="editable">
+<ng-container *ngIf="editing | async">
   <div
     class="part-list"
     cdkDropList
@@ -15,7 +15,7 @@
   </div>
 </ng-container>
 
-<ng-container *ngIf="!editable">
+<ng-container *ngIf="!(editing | async)">
   <ng-container
     *ngFor="let part of parts | async; trackBy: trackById"
     [partPart]="part"

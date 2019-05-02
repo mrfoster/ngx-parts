@@ -1,15 +1,19 @@
-import { Component, Inject } from '@angular/core';
-import { PartsService, PARTS_SERVICE } from 'parts';
+import { Component } from '@angular/core';
+import { PartsService } from 'parts';
+import { Observable } from 'rxjs';
 import { v4 } from 'uuid';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  editable = false;
-  constructor(@Inject(PARTS_SERVICE) private partsService: PartsService) {}
+  editing: Observable<boolean>;
+
+  constructor(private partsService: PartsService) {
+    this.editing = partsService.editing;
+  }
 
   addContentPart() {
     this.partsService.add({
@@ -34,6 +38,6 @@ export class AppComponent {
   }
 
   toggleEdit() {
-    this.editable = !this.editable;
+    this.partsService.canEdit = !this.partsService.canEdit;
   }
 }

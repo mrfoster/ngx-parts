@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { PartRegistration, Stateful } from 'parts';
-import { ContentState } from './content-state';
 
 @Component({
   selector: 'app-content-part',
@@ -9,7 +8,7 @@ import { ContentState } from './content-state';
 export class ContentPartComponent implements Stateful<ContentState> {
   state: ContentState;
 
-  setState(state: ContentState) {
+  setState(state: ContentState): void {
     this.state = state;
   }
 }
@@ -19,3 +18,7 @@ export const ContentPartRegistration: PartRegistration = {
   name: 'app-content-part',
   type: ContentPartComponent
 };
+
+export class ContentState {
+  content: string;
+}
