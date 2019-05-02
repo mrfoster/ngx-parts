@@ -1,26 +1,27 @@
 import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { PartsModule, PARTS_STORE, PART_REGISTRATIONS } from 'parts';
+import { AddPartComponent } from './add-part/add-part.component';
 import { AppComponent } from './app.component';
 import {
   ContentPartComponent,
   ContentPartRegistration
-} from './content/content-part.component';
+} from './parts/content/content-part.component';
 import {
   IframePartComponent,
   IframePartRegistration
-} from './iframe/iframe-part.component';
-import { TestPartsStore } from './test-parts-store.service';
+} from './parts/iframe/iframe-part.component';
 import {
   TestPartComponent,
   TestPartRegistration
-} from './test/test-part.component';
+} from './parts/test/test-part.component';
 import {
   TimerPartComponent,
   TimerPartRegistration
-} from './timer/timer-part.component';
-
+} from './parts/timer/timer-part.component';
+import { TestPartsStore } from './test-parts-store.service';
 const parts = [
   ContentPartComponent,
   IframePartComponent,
@@ -29,9 +30,9 @@ const parts = [
 ];
 
 @NgModule({
-  declarations: [AppComponent, parts],
+  declarations: [AppComponent, AddPartComponent, parts],
   entryComponents: parts,
-  imports: [BrowserModule, BrowserAnimationsModule, PartsModule],
+  imports: [BrowserModule, BrowserAnimationsModule, PartsModule, FormsModule],
   providers: [
     {
       provide: PARTS_STORE,

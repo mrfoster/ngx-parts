@@ -1,0 +1,5 @@
+:host:after,
+:host:before {
+  content: ' ';
+  display: table;
+}

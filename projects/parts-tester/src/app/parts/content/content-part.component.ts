@@ -6,7 +6,9 @@ import { PartRegistration, Stateful } from 'parts';
   templateUrl: './content-part.component.html'
 })
 export class ContentPartComponent implements Stateful<ContentState> {
-  state: ContentState;
+  state: ContentState = {
+    content: 'dsfd'
+  };
 
   setState(state: ContentState): void {
     this.state = state;

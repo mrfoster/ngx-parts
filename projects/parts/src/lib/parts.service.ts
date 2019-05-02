@@ -38,13 +38,16 @@ export class PartsService {
   add<T>(type: string, group: string, state: T): void;
 
   add<T>(partOrType: Part | string, group?: string, state?: T): void {
-    const part = (partOrType as Part) || {
-      id: v4(),
-      group: group,
-      type: partOrType as string,
-      state: state ? JSON.stringify(state) : null,
-      index: 0
-    };
+    const part: Part =
+      typeof partOrType === 'string'
+        ? {
+            id: v4(),
+            group: group,
+            type: partOrType as string,
+            state: state ? JSON.stringify(state) : null,
+            index: 0 // TODO: get index
+          }
+        : partOrType;
 
     this.currentParts = [...this.currentParts, part];
   }
@@ -61,14 +64,28 @@ export class PartsService {
   //     .filter(x => x.id !== part.id);
   // }
 
-  update(part: Part): void {
+  update(part: Part): void;
+  update<T>(id: string, state: T): void;
+
+  update<T>(partOrId: Part | string, state?: T): void {
+    const part: Part =
+      typeof partOrId === 'string'
+        ? this.currentParts.find(p => p.id === partOrId)
+        : partOrId;
+
+    if (!part) {
+      return;
+    }
+
     this.currentParts = [
       ...this.currentParts.filter(p => p.id !== part.id),
-      part
+      state ? { ...part, state: JSON.stringify(state) } : { ...part }
     ];
   }
 
   remove(id: string): void {
     this.currentParts = this.currentParts.filter(p => p.id !== id);
   }
+
+  changes: any[] = [];
 }

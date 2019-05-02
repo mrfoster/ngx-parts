@@ -19,7 +19,7 @@ export class IframePartComponent implements Stateful<IframeState> {
 }
 
 export const IframePartRegistration: PartRegistration = {
-  displayName: 'Content',
+  displayName: 'IFrame',
   name: 'app-iframe-part',
   type: IframePartComponent
 };

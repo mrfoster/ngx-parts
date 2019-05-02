@@ -1,0 +1,22 @@
+<ng-container *ngIf="canEdit | async">
+  <ng-container *ngIf="!editing">
+    <button (click)="remove()">Remove</button>
+    <button (click)="edit()">Edit</button>
+  </ng-container>
+  <ng-container *ngIf="editing">
+    <textarea [(ngModel)]="editableState"></textarea>
+    <button (click)="save()">Save</button>
+    <button (click)="cancel()">Cancel</button>
+  </ng-container>
+</ng-container>
+
+<ng-container *ngIf="!editing">
+  <dl>
+    <dt>Set count</dt>
+    <dd>{{ setCount }}</dd>
+    <dt>Check count</dt>
+    <dd>{{ checkCount }}</dd>
+  </dl>
+
+  <pre>{{ state | json }}</pre>
+</ng-container>
