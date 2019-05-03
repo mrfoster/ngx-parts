@@ -1,11 +1,20 @@
 import {
   CdkDragDrop,
+  DropListRef,
   moveItemInArray,
   transferArrayItem
 } from '@angular/cdk/drag-drop';
-import { Component, Inject, Input, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import {
+  Component,
+  ElementRef,
+  Inject,
+  Input,
+  OnDestroy,
+  OnInit,
+  Renderer2
+} from '@angular/core';
+import { Observable, Subscription, timer } from 'rxjs';
+import { flatMap, map } from 'rxjs/operators';
 import { Part } from '../part';
 import { PartsService } from '../parts.service';
 import { PartsStore, PARTS_STORE } from '../parts.store';
@@ -15,20 +24,23 @@ import { PartsStore, PARTS_STORE } from '../parts.store';
   templateUrl: './container.component.html',
   styleUrls: ['./container.component.css']
 })
-export class ContainerComponent implements OnInit {
+export class ContainerComponent implements OnInit, OnDestroy {
   @Input() group: string;
 
   parts: Observable<Part[]>;
   editing: Observable<boolean>;
+  private subscription = new Subscription();
+  private dropList: DropListRef<Part[]>;
 
   constructor(
     @Inject(PARTS_STORE) private partsStore: PartsStore,
-    private partsService: PartsService
-  ) {
+    private partsService: PartsService,
+    private elRef: ElementRef<HTMLElement>,
+    private renderer: Renderer2
+  ) // private dragDrop: DragDrop,
+  {
     this.editing = partsService.editing;
-  }
 
-  ngOnInit() {
     this.parts = this.partsService.parts.pipe(
       map(parts =>
         parts
@@ -37,10 +49,48 @@ export class ContainerComponent implements OnInit {
       )
     );
 
-    this.partsStore.load([this.group]);
+    timer(0)
+      .pipe(flatMap(x => this.partsStore.load([this.group])))
+      .subscribe();
+
+    // this.dropList = this.dragDrop.createDropList<Part[]>(this.elRef);
+
+    // this.subscription.add(
+    //   this.dropList.dropped
+    //     .pipe(
+    //       map(event => ({
+    //         previousIndex: event.previousIndex,
+    //         currentIndex: event.currentIndex,
+    //         previousContainer: event.previousContainer.data,
+    //         container: event.container.data,
+    //         item: event.item.data,
+    //         isPointerOverContainer: event.isPointerOverContainer
+    //       }))
+    //     )
+    //     .subscribe(e => {
+    //       this.drop(e);
+    //     })
+    // );
+
+    // this.subscription.add(
+    //   this.partsService.parts.subscribe(parts => {
+    //     this.dropList.data = parts;
+    //     // TODO
+    //     //this.dropList.withItems()
+    //   })
+    // );
   }
 
-  trackById(index, item) {
+  ngOnInit(): void {
+    this.renderer.addClass(this.elRef.nativeElement, 'part-list');
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
+    this.dropList.dispose();
+  }
+
+  trackById(_index: any, item: Part) {
     return item.id;
   }
 

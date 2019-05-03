@@ -61,7 +61,10 @@ export class TestPartsStore implements PartsStore {
   ];
 
   load(groups: string[]): Observable<void> {
-    this.partsService.currentParts = this.data;
+    this.partsService.currentParts = [
+      ...this.partsService.currentParts,
+      ...this.data.filter(p => groups.includes(p.group))
+    ];
     return of(null);
   }
 

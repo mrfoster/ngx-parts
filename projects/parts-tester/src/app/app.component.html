@@ -6,7 +6,7 @@
   <button (click)="toggleEdit()">Save</button>
   <button (click)="toggleEdit()">Cancel</button>
 
-  <app-add-part></app-add-part>
+  <app-add-part group="main"></app-add-part>
 </ng-container>
 
 <div cdkDropListGroup class="page">
@@ -30,3 +30,9 @@
     <part-container group="footer"></part-container>
   </footer>
 </div>
+
+<hr />
+
+<pre>
+    {{ parts | async | json }}
+</pre>

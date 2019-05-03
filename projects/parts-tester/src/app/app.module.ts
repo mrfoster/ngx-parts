@@ -14,6 +14,10 @@ import {
   IframePartRegistration
 } from './parts/iframe/iframe-part.component';
 import {
+  LayoutContainerPartComponent,
+  LayoutContainerPartRegistration
+} from './parts/layout-container/layout-container-part.component';
+import {
   TestPartComponent,
   TestPartRegistration
 } from './parts/test/test-part.component';
@@ -26,7 +30,8 @@ const parts = [
   ContentPartComponent,
   IframePartComponent,
   TimerPartComponent,
-  TestPartComponent
+  TestPartComponent,
+  LayoutContainerPartComponent
 ];
 
 @NgModule({
@@ -56,6 +61,11 @@ const parts = [
     {
       provide: PART_REGISTRATIONS,
       useValue: TestPartRegistration,
+      multi: true
+    },
+    {
+      provide: PART_REGISTRATIONS,
+      useValue: LayoutContainerPartRegistration,
       multi: true
     }
   ],

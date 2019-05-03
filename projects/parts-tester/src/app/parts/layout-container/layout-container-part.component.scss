@@ -1,0 +1,10 @@
+part-container {
+  border: 1px solid #000;
+  height: 400px;
+  display: flex;
+  flex-wrap: wrap;
+
+  app-timer-part {
+    width: 100px;
+  }
+}

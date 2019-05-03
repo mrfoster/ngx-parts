@@ -10,6 +10,7 @@
       *ngFor="let part of parts | async; trackBy: trackById"
       cdkDrag
     >
+      <span cdkDragHandle>Drag</span>
       <ng-container [partPart]="part"></ng-container>
     </div>
   </div>
