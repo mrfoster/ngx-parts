@@ -3,8 +3,10 @@ import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {
-  InMemoryPartsService,
+  DefaultPartsService,
+  LocalPartsDataService,
   PartsModule,
+  PARTS_DATA_SERVICE,
   PARTS_SERVICE,
   PART_REGISTRATIONS
 } from 'parts';
@@ -45,7 +47,11 @@ const parts = [
   providers: [
     {
       provide: PARTS_SERVICE,
-      useClass: InMemoryPartsService
+      useClass: DefaultPartsService
+    },
+    {
+      provide: PARTS_DATA_SERVICE,
+      useClass: LocalPartsDataService
     },
     {
       provide: PART_REGISTRATIONS,

@@ -27,25 +27,29 @@ export class AppComponent {
   }
 
   addContentPart() {
-    this.partsService.add({
-      id: v4(),
-      group: 'main',
-      type: 'app-content-part',
-      index: 0,
-      state: `{
+    this.partsService
+      .add({
+        id: v4(),
+        group: 'main',
+        type: 'app-content-part',
+        index: 0,
+        state: `{
         "content": "<h1>Test</h1>"
       }`
-    });
+      })
+      .subscribe();
   }
 
   addTimerPart() {
-    this.partsService.add({
-      id: v4(),
-      group: 'aside',
-      type: 'app-timer-part',
-      index: 0,
-      state: ''
-    });
+    this.partsService
+      .add({
+        id: v4(),
+        group: 'aside',
+        type: 'app-timer-part',
+        index: 0,
+        state: ''
+      })
+      .subscribe();
   }
 
   toggleEdit() {
@@ -53,7 +57,7 @@ export class AppComponent {
   }
 
   save() {
-    this.partsService.save();
+    this.partsService.save().subscribe();
     this.partsEditService.canEdit = false;
   }
 

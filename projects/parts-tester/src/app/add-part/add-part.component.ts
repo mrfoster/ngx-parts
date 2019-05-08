@@ -18,6 +18,6 @@ export class AddPartComponent {
   ) {}
 
   add(part: PartRegistration) {
-    this.partsService.add(part.name, this.group);
+    this.partsService.add(part.name, this.group).subscribe();
   }
 }

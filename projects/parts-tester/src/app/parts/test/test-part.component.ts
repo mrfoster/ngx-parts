@@ -43,7 +43,7 @@ export class TestPartComponent implements Stateful<any>, Identifiable, DoCheck {
   }
 
   remove() {
-    this.partsService.delete(this.id);
+    this.partsService.delete(this.id).subscribe();
   }
 
   ngDoCheck(): void {
@@ -57,7 +57,7 @@ export class TestPartComponent implements Stateful<any>, Identifiable, DoCheck {
 
   save() {
     this.state = JSON.parse(this.editableState);
-    this.partsService.update(this.id, this.state);
+    this.partsService.update(this.id, this.state).subscribe();
     this.editing = false;
   }
 
