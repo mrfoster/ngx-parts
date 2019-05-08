@@ -3,8 +3,9 @@
 </button>
 
 <ng-container *ngIf="editing | async">
-  <button (click)="toggleEdit()">Save</button>
-  <button (click)="toggleEdit()">Cancel</button>
+  <button (click)="seedTestData()">Seed</button>
+  <button (click)="save()">Save</button>
+  <button (click)="undo()">Undo</button>
 
   <app-add-part group="main"></app-add-part>
 </ng-container>

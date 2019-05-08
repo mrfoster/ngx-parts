@@ -24,14 +24,21 @@
     "@angular/platform-browser": "~7.2.14",
     "@angular/platform-browser-dynamic": "~7.2.14",
     "@angular/router": "~7.2.14",
+    "@ngrx/effects": "^7.4.0",
+    "@ngrx/entity": "^7.4.0",
+    "@ngrx/store": "^7.4.0",
+    "@ngrx/store-devtools": "^7.4.0",
     "@types/uuid": "^3.4.4",
     "core-js": "^2.5.4",
+    "ngrx-data": "^6.1.0-beta.3",
     "ngx-logger": "^3.3.12",
     "normalize.css": "^8.0.1",
     "rxjs": "~6.5.1",
     "tslib": "^1.9.0",
     "uuid": "^3.3.2",
-    "zone.js": "~0.8.26"
+    "zone.js": "~0.8.26",
+    "apollo-server": "^2.4.8",
+    "graphql": "^14.3.0"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.12.0",

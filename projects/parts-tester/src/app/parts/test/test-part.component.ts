@@ -1,5 +1,17 @@
-import { ChangeDetectionStrategy, Component, DoCheck } from '@angular/core';
-import { Identifiable, PartRegistration, PartsService, Stateful } from 'parts';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DoCheck,
+  Inject
+} from '@angular/core';
+import {
+  Identifiable,
+  PartRegistration,
+  PartsEditService,
+  PartsService,
+  PARTS_SERVICE,
+  Stateful
+} from 'parts';
 import { Observable } from 'rxjs';
 
 @Component({
@@ -9,8 +21,11 @@ import { Observable } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TestPartComponent implements Stateful<any>, Identifiable, DoCheck {
-  constructor(private partsService: PartsService) {
-    this.canEdit = partsService.editing;
+  constructor(
+    @Inject(PARTS_SERVICE) private partsService: PartsService,
+    partsEditService: PartsEditService
+  ) {
+    this.canEdit = partsEditService.editingChanged;
   }
   id: string;
   canEdit: Observable<boolean>;
@@ -28,7 +43,7 @@ export class TestPartComponent implements Stateful<any>, Identifiable, DoCheck {
   }
 
   remove() {
-    this.partsService.remove(this.id);
+    this.partsService.delete(this.id);
   }
 
   ngDoCheck(): void {

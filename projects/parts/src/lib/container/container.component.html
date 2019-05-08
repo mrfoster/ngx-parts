@@ -1,13 +1,13 @@
-<ng-container *ngIf="editing | async">
+<ng-container *ngIf="editingChanged | async">
   <div
     class="part-list"
     cdkDropList
-    [cdkDropListData]="parts | async"
+    [cdkDropListData]="partsChanged | async"
     (cdkDropListDropped)="drop($event)"
   >
     <div
       class="part-item"
-      *ngFor="let part of parts | async; trackBy: trackById"
+      *ngFor="let part of partsChanged | async; trackBy: trackById"
       cdkDrag
     >
       <span cdkDragHandle>Drag</span>
@@ -16,9 +16,9 @@
   </div>
 </ng-container>
 
-<ng-container *ngIf="!(editing | async)">
+<ng-container *ngIf="!(editingChanged | async)">
   <ng-container
-    *ngFor="let part of parts | async; trackBy: trackById"
+    *ngFor="let part of partsChanged | async; trackBy: trackById"
     [partPart]="part"
   ></ng-container>
 </ng-container>

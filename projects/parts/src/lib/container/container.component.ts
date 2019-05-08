@@ -16,8 +16,8 @@ import {
 import { Observable, Subscription, timer } from 'rxjs';
 import { flatMap, map } from 'rxjs/operators';
 import { Part } from '../part';
-import { PartsService } from '../parts.service';
-import { PartsStore, PARTS_STORE } from '../parts.store';
+import { PartsEditService } from '../parts-edit.service';
+import { PartsService, PARTS_SERVICE } from '../parts.service';
 
 @Component({
   selector: 'part-container',
@@ -27,21 +27,20 @@ import { PartsStore, PARTS_STORE } from '../parts.store';
 export class ContainerComponent implements OnInit, OnDestroy {
   @Input() group: string;
 
-  parts: Observable<Part[]>;
-  editing: Observable<boolean>;
+  partsChanged: Observable<Part[]>;
+  editingChanged: Observable<boolean>;
   private subscription = new Subscription();
   private dropList: DropListRef<Part[]>;
 
   constructor(
-    @Inject(PARTS_STORE) private partsStore: PartsStore,
-    private partsService: PartsService,
+    @Inject(PARTS_SERVICE) private partsService: PartsService,
+    partsEditService: PartsEditService,
     private elRef: ElementRef<HTMLElement>,
-    private renderer: Renderer2
-  ) // private dragDrop: DragDrop,
-  {
-    this.editing = partsService.editing;
+    private renderer: Renderer2 // private dragDrop: DragDrop,
+  ) {
+    this.editingChanged = partsEditService.editingChanged;
 
-    this.parts = this.partsService.parts.pipe(
+    this.partsChanged = this.partsService.partsChanged.pipe(
       map(parts =>
         parts
           .filter(part => part.group === this.group)
@@ -50,7 +49,7 @@ export class ContainerComponent implements OnInit, OnDestroy {
     );
 
     timer(0)
-      .pipe(flatMap(x => this.partsStore.load([this.group])))
+      .pipe(flatMap(x => this.partsService.load([this.group])))
       .subscribe();
 
     // this.dropList = this.dragDrop.createDropList<Part[]>(this.elRef);
@@ -95,11 +94,11 @@ export class ContainerComponent implements OnInit, OnDestroy {
   }
 
   drop(event: CdkDragDrop<Part[]>) {
-    const updatePartIndexes = (parts: Part[]) => {
-      parts.forEach((part, index) => {
-        part.index = index;
-      });
-    };
+    const updatePartIndexes = (parts: Part[]) =>
+      parts
+        .map((part, index) => ({ part: part, index: index }))
+        .filter(x => x.index !== x.part.index)
+        .map(x => ({ ...x.part, index: x.index }));
 
     if (event.previousContainer === event.container) {
       if (event.currentIndex === event.previousIndex) {
@@ -112,8 +111,8 @@ export class ContainerComponent implements OnInit, OnDestroy {
         event.currentIndex
       );
 
-      updatePartIndexes(event.container.data);
-      this.partsService.currentParts = [...this.partsService.currentParts];
+      const updatedParts = updatePartIndexes(event.container.data);
+      this.partsService.update(updatedParts);
     } else {
       transferArrayItem(
         event.previousContainer.data,
@@ -122,10 +121,23 @@ export class ContainerComponent implements OnInit, OnDestroy {
         event.currentIndex
       );
 
-      updatePartIndexes(event.container.data);
-      updatePartIndexes(event.previousContainer.data);
-      event.container.data[event.currentIndex].group = this.group;
-      this.partsService.currentParts = [...this.partsService.currentParts];
+      const transferredPart = event.container.data[event.currentIndex];
+      transferredPart.group = this.group;
+
+      const updatedParts = [
+        ...updatePartIndexes(event.container.data),
+        ...updatePartIndexes(event.previousContainer.data)
+      ];
+
+      const updatedPartsContainsTransferredPart = updatedParts.find(
+        x => x.id === transferredPart.id
+      );
+
+      this.partsService.update(
+        updatedPartsContainsTransferredPart
+          ? updatedParts
+          : [...updatedParts, transferredPart]
+      );
     }
   }
 }

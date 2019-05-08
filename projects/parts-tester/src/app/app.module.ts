@@ -2,7 +2,12 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { PartsModule, PARTS_STORE, PART_REGISTRATIONS } from 'parts';
+import {
+  InMemoryPartsService,
+  PartsModule,
+  PARTS_SERVICE,
+  PART_REGISTRATIONS
+} from 'parts';
 import { AddPartComponent } from './add-part/add-part.component';
 import { AppComponent } from './app.component';
 import {
@@ -25,7 +30,6 @@ import {
   TimerPartComponent,
   TimerPartRegistration
 } from './parts/timer/timer-part.component';
-import { TestPartsStore } from './test-parts-store.service';
 const parts = [
   ContentPartComponent,
   IframePartComponent,
@@ -40,8 +44,8 @@ const parts = [
   imports: [BrowserModule, BrowserAnimationsModule, PartsModule, FormsModule],
   providers: [
     {
-      provide: PARTS_STORE,
-      useClass: TestPartsStore
+      provide: PARTS_SERVICE,
+      useClass: InMemoryPartsService
     },
     {
       provide: PART_REGISTRATIONS,

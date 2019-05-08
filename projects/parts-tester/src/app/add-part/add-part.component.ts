@@ -1,5 +1,10 @@
 import { Component, Inject, Input } from '@angular/core';
-import { PartRegistration, PartsService, PART_REGISTRATIONS } from 'parts';
+import {
+  PartRegistration,
+  PartsService,
+  PARTS_SERVICE,
+  PART_REGISTRATIONS
+} from 'parts';
 
 @Component({
   selector: 'app-add-part',
@@ -9,7 +14,7 @@ export class AddPartComponent {
   @Input() group: string;
   constructor(
     @Inject(PART_REGISTRATIONS) public partRegistrations: PartRegistration[],
-    private partsService: PartsService
+    @Inject(PARTS_SERVICE) private partsService: PartsService
   ) {}
 
   add(part: PartRegistration) {
