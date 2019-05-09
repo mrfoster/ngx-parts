@@ -13,8 +13,9 @@ import {
   OnInit,
   Renderer2
 } from '@angular/core';
-import { Observable, Subscription, timer } from 'rxjs';
+import { Observable, of, Subscription, timer } from 'rxjs';
 import { flatMap, map } from 'rxjs/operators';
+import { v4 } from 'uuid';
 import { Part } from '../part';
 import { PartsEditService } from '../parts-edit.service';
 import { PartsService, PARTS_SERVICE } from '../parts.service';
@@ -26,6 +27,7 @@ import { PartsService, PARTS_SERVICE } from '../parts.service';
 })
 export class ContainerComponent implements OnInit, OnDestroy {
   @Input() group: string;
+  @Input() defaultParts: Part[];
 
   partsChanged: Observable<Part[]>;
   editingChanged: Observable<boolean>;
@@ -48,9 +50,29 @@ export class ContainerComponent implements OnInit, OnDestroy {
       )
     );
 
-    timer(0)
-      .pipe(flatMap(x => this.partsService.load([this.group])))
-      .subscribe();
+    this.subscription.add(
+      timer(0)
+        .pipe(
+          flatMap(x => this.partsService.load([this.group])),
+          flatMap(parts => {
+            if (parts && parts.length) {
+              return of(parts);
+            }
+
+            return this.partsService.add([
+              ...this.defaultParts,
+              {
+                id: v4(),
+                index: 0,
+                state: null,
+                type: 'init-marker',
+                group: this.group
+              }
+            ]);
+          })
+        )
+        .subscribe()
+    );
 
     // this.dropList = this.dragDrop.createDropList<Part[]>(this.elRef);
 

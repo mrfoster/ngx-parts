@@ -29,29 +29,36 @@ export class DefaultPartsService implements PartsService {
   readonly partsChanged = this._partsChanged.asObservable();
 
   add(part: Part): Observable<Part>;
+  add(parts: Part[]): Observable<Part[]>;
   add(type: string, group: string): Observable<Part>;
   add<T>(type: string, group: string, state: T): Observable<Part>;
-  add(partOrType: Part | string, group?: any, state?: any) {
-    const part: Part =
+  add(partOrType: Part[] | Part | string, group?: any, state?: any) {
+    const isMany = partOrType instanceof Array;
+
+    const parts: Part[] =
       typeof partOrType === 'string'
-        ? {
-            id: v4(),
-            group: group,
-            type: partOrType as string,
-            state: state ? JSON.stringify(state) : null,
-            index: 0 // TODO: get index
-          }
-        : partOrType;
+        ? [
+            {
+              id: v4(),
+              group: group,
+              type: partOrType as string,
+              state: state ? JSON.stringify(state) : null,
+              index: 0 // TODO: get index
+            }
+          ]
+        : partOrType instanceof Array
+        ? partOrType
+        : [partOrType];
 
     this.applyChanges([
-      ...[...this._parts.values()].filter(x => x.value.id !== part.id),
-      {
+      ...this._parts.values(),
+      ...parts.map(part => ({
         changeType: ChangeType.Added,
         value: part
-      }
+      }))
     ]);
 
-    return of(part);
+    return of(isMany ? parts : parts[0]);
   }
 
   update<T>(id: string, state: T): Observable<Part[]>;

@@ -13,6 +13,18 @@ export class AppComponent {
   parts: Observable<Part[]>;
   editing: Observable<boolean>;
 
+  defaultHeaderParts = [
+    {
+      id: 'd69ac579-276a-454c-9cca-b90dadc206a5',
+      group: 'header',
+      type: 'app-content-part',
+      index: 0,
+      state: `{
+      "content": "<ul><li>Link 1</li><li>Link 2</li><li>Link 3</li></ul>"
+    }`
+    }
+  ];
+
   constructor(
     @Inject(PARTS_SERVICE) private partsService: PartsService,
     private partsEditService: PartsEditService

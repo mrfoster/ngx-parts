@@ -12,7 +12,10 @@
 
 <div cdkDropListGroup class="page">
   <header class="header">
-    <part-container group="header"></part-container>
+    <part-container
+      group="header"
+      [defaultParts]="defaultHeaderParts"
+    ></part-container>
   </header>
 
   <nav class="nav">
