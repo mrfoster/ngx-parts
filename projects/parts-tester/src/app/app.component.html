@@ -3,7 +3,6 @@
 </button>
 
 <ng-container *ngIf="editing | async">
-  <button (click)="seedTestData()">Seed</button>
   <button (click)="save()">Save</button>
   <button (click)="undo()">Undo</button>
 
@@ -14,24 +13,36 @@
   <header class="header">
     <part-container
       group="header"
-      [defaultParts]="defaultHeaderParts"
+      [defaultParts]="defaultParts['header']"
     ></part-container>
   </header>
 
   <nav class="nav">
-    <part-container group="nav"></part-container>
+    <part-container
+      group="nav"
+      [defaultParts]="defaultParts['nav']"
+    ></part-container>
   </nav>
 
   <main class="main">
-    <part-container group="main"></part-container>
+    <part-container
+      group="main"
+      [defaultParts]="defaultParts['main']"
+    ></part-container>
   </main>
 
   <aside class="aside">
-    <part-container group="aside"></part-container>
+    <part-container
+      group="aside"
+      [defaultParts]="defaultParts['aside']"
+    ></part-container>
   </aside>
 
   <footer class="footer">
-    <part-container group="footer"></part-container>
+    <part-container
+      group="footer"
+      [defaultParts]="defaultParts['footer']"
+    ></part-container>
   </footer>
 </div>
 

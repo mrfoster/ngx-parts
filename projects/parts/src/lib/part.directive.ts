@@ -30,6 +30,8 @@ export class PartDirective implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.componentRef.destroy();
+    if (this.componentRef) {
+      this.componentRef.destroy();
+    }
   }
 }

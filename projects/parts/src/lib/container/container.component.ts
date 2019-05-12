@@ -14,16 +14,16 @@ import {
   Renderer2
 } from '@angular/core';
 import { Observable, of, Subscription, timer } from 'rxjs';
-import { flatMap, map } from 'rxjs/operators';
+import { flatMap, map, share } from 'rxjs/operators';
 import { v4 } from 'uuid';
 import { Part } from '../part';
 import { PartsEditService } from '../parts-edit.service';
 import { PartsService, PARTS_SERVICE } from '../parts.service';
 
 @Component({
-  selector: 'part-container',
+  selector: 'part-container,[partContainer]',
   templateUrl: './container.component.html',
-  styleUrls: ['./container.component.css']
+  styleUrls: ['./container.component.scss']
 })
 export class ContainerComponent implements OnInit, OnDestroy {
   @Input() group: string;
@@ -40,7 +40,7 @@ export class ContainerComponent implements OnInit, OnDestroy {
     private elRef: ElementRef<HTMLElement>,
     private renderer: Renderer2 // private dragDrop: DragDrop,
   ) {
-    this.editingChanged = partsEditService.editingChanged;
+    this.editingChanged = partsEditService.editingChanged.pipe(share());
 
     this.partsChanged = this.partsService.partsChanged.pipe(
       map(parts =>
@@ -108,7 +108,9 @@ export class ContainerComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
-    this.dropList.dispose();
+    if (this.dropList) {
+      this.dropList.dispose();
+    }
   }
 
   trackById(_index: any, item: Part) {
