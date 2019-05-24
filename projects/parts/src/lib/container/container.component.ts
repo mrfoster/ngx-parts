@@ -1,22 +1,26 @@
 import {
-  CdkDragDrop,
+  DragDrop,
   DropListRef,
   moveItemInArray,
   transferArrayItem
 } from '@angular/cdk/drag-drop';
 import {
+  AfterViewInit,
+  ChangeDetectorRef,
   Component,
   ElementRef,
   Inject,
   Input,
   OnDestroy,
   OnInit,
-  Renderer2
+  QueryList,
+  ViewChildren
 } from '@angular/core';
 import { Observable, of, Subscription, timer } from 'rxjs';
 import { flatMap, map, share } from 'rxjs/operators';
 import { v4 } from 'uuid';
 import { Part } from '../part';
+import { PartDirective } from '../part.directive';
 import { PartsEditService } from '../parts-edit.service';
 import { PartsService, PARTS_SERVICE } from '../parts.service';
 
@@ -25,9 +29,11 @@ import { PartsService, PARTS_SERVICE } from '../parts.service';
   templateUrl: './container.component.html',
   styleUrls: ['./container.component.scss']
 })
-export class ContainerComponent implements OnInit, OnDestroy {
+export class ContainerComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() group: string;
   @Input() defaultParts: Part[];
+
+  @ViewChildren(PartDirective) partDirectives: QueryList<PartDirective>;
 
   partsChanged: Observable<Part[]>;
   editingChanged: Observable<boolean>;
@@ -38,7 +44,8 @@ export class ContainerComponent implements OnInit, OnDestroy {
     @Inject(PARTS_SERVICE) private partsService: PartsService,
     partsEditService: PartsEditService,
     private elRef: ElementRef<HTMLElement>,
-    private renderer: Renderer2 // private dragDrop: DragDrop,
+    private dragDrop: DragDrop,
+    private changeDetectorRef: ChangeDetectorRef
   ) {
     this.editingChanged = partsEditService.editingChanged.pipe(share());
 
@@ -74,50 +81,53 @@ export class ContainerComponent implements OnInit, OnDestroy {
         .subscribe()
     );
 
-    // this.dropList = this.dragDrop.createDropList<Part[]>(this.elRef);
+    this.dropList = this.dragDrop.createDropList<Part[]>(this.elRef);
 
-    // this.subscription.add(
-    //   this.dropList.dropped
-    //     .pipe(
-    //       map(event => ({
-    //         previousIndex: event.previousIndex,
-    //         currentIndex: event.currentIndex,
-    //         previousContainer: event.previousContainer.data,
-    //         container: event.container.data,
-    //         item: event.item.data,
-    //         isPointerOverContainer: event.isPointerOverContainer
-    //       }))
-    //     )
-    //     .subscribe(e => {
-    //       this.drop(e);
-    //     })
-    // );
-
-    // this.subscription.add(
-    //   this.partsService.parts.subscribe(parts => {
-    //     this.dropList.data = parts;
-    //     // TODO
-    //     //this.dropList.withItems()
-    //   })
-    // );
+    this.subscription.add(
+      this.dropList.dropped
+        .pipe(
+          map(event => ({
+            previousIndex: event.previousIndex,
+            currentIndex: event.currentIndex,
+            previousContainer: event.previousContainer,
+            container: event.container,
+            item: event.item,
+            isPointerOverContainer: event.isPointerOverContainer
+          }))
+        )
+        .subscribe(e => {
+          this.drop(e);
+          this.changeDetectorRef.markForCheck();
+        })
+    );
   }
 
   ngOnInit(): void {
-    this.renderer.addClass(this.elRef.nativeElement, 'part-list');
+    this.elRef.nativeElement.classList.add('part-list');
+  }
+
+  ngAfterViewInit(): void {
+    this.partDirectives.changes.subscribe(
+      (partDirectives: QueryList<PartDirective>) => {
+        const dragRefs = partDirectives.map(x => x.dragRef).filter(x => !!x);
+        this.dropList.withItems(dragRefs);
+        this.dropList.data = dragRefs.map(p => p.data);
+      }
+    );
   }
 
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
     if (this.dropList) {
       this.dropList.dispose();
     }
+    this.subscription.unsubscribe();
   }
 
   trackById(_index: any, item: Part) {
     return item.id;
   }
 
-  drop(event: CdkDragDrop<Part[]>) {
+  drop(event) {
     const updatePartIndexes = (parts: Part[]) =>
       parts
         .map((part, index) => ({ part: part, index: index }))
@@ -128,7 +138,6 @@ export class ContainerComponent implements OnInit, OnDestroy {
       if (event.currentIndex === event.previousIndex) {
         return;
       }
-
       moveItemInArray(
         event.container.data,
         event.previousIndex,
