@@ -59,6 +59,10 @@ export class ContainerComponent implements OnInit, OnDestroy {
               return of(parts);
             }
 
+            if (!this.defaultParts || !this.defaultParts.length) {
+              return of([]);
+            }
+
             return this.partsService.add([
               ...this.defaultParts,
               {
