@@ -13,7 +13,7 @@ export interface PartsService {
     type: string,
     group: string,
     state: T
-  ): Observable<Part> | Observable<Part[]>;
+  ): Observable<Part>;
 
   update<T>(id: string, state: T): Observable<Part[]>;
   update(parts: Part[]): Observable<Part[]>;
