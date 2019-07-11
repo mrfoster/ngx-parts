@@ -64,9 +64,10 @@ export class ContainerComponent implements OnInit, OnDestroy {
             }
 
             return this.partsService.add([
-              ...this.defaultParts.map(part => ({
+              ...this.defaultParts.map((part, i) => ({
                 ...part,
                 id: part.id || v4(),
+                index: i,
                 group: this.group
               })),
               {
