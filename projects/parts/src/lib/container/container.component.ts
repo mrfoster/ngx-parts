@@ -64,7 +64,11 @@ export class ContainerComponent implements OnInit, OnDestroy {
             }
 
             return this.partsService.add([
-              ...this.defaultParts,
+              ...this.defaultParts.map(part => ({
+                ...part,
+                id: part.id || v4(),
+                group: this.group
+              })),
               {
                 id: v4(),
                 index: 0,
@@ -128,6 +132,13 @@ export class ContainerComponent implements OnInit, OnDestroy {
         .filter(x => x.index !== x.part.index)
         .map(x => ({ ...x.part, index: x.index }));
 
+      let updatedParts: {
+          index: number;
+          id: string;
+          type: string;
+          group: string;
+          state: string;
+      }[];
     if (event.previousContainer === event.container) {
       if (event.currentIndex === event.previousIndex) {
         return;
@@ -139,7 +150,7 @@ export class ContainerComponent implements OnInit, OnDestroy {
         event.currentIndex
       );
 
-      const updatedParts = updatePartIndexes(event.container.data);
+      updatedParts = updatePartIndexes(event.container.data);
       this.partsService.update(updatedParts);
     } else {
       transferArrayItem(
@@ -152,7 +163,7 @@ export class ContainerComponent implements OnInit, OnDestroy {
       const transferredPart = event.container.data[event.currentIndex];
       transferredPart.group = this.group;
 
-      const updatedParts = [
+      updatedParts = [
         ...updatePartIndexes(event.container.data),
         ...updatePartIndexes(event.previousContainer.data)
       ];
@@ -161,11 +172,12 @@ export class ContainerComponent implements OnInit, OnDestroy {
         x => x.id === transferredPart.id
       );
 
-      this.partsService.update(
-        updatedPartsContainsTransferredPart
-          ? updatedParts
-          : [...updatedParts, transferredPart]
-      );
+      updatedParts = updatedPartsContainsTransferredPart
+      ? updatedParts
+      : [...updatedParts, transferredPart];
+
     }
+
+    this.partsService.update(updatedParts).subscribe();
   }
 }
