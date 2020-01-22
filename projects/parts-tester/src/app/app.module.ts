@@ -32,6 +32,10 @@ import {
   TimerPartComponent,
   TimerPartRegistration
 } from './parts/timer/timer-part.component';
+import { AppRoutingModule } from './app-routing.module';
+import { HomePageComponent } from './home-page/home-page.component';
+import { AboutPageComponent } from './about-page/about-page.component';
+
 const parts = [
   ContentPartComponent,
   IframePartComponent,
@@ -41,9 +45,9 @@ const parts = [
 ];
 
 @NgModule({
-  declarations: [AppComponent, AddPartComponent, parts],
+  declarations: [AppComponent, AddPartComponent, parts, HomePageComponent, AboutPageComponent],
   entryComponents: parts,
-  imports: [BrowserModule, BrowserAnimationsModule, PartsModule, FormsModule],
+  imports: [BrowserModule, BrowserAnimationsModule, PartsModule, FormsModule, AppRoutingModule],
   providers: [
     {
       provide: PARTS_SERVICE,
