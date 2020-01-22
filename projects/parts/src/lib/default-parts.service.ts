@@ -20,7 +20,6 @@ type PartChangeState = ChangeState<Part>;
 
 @Injectable()
 export class DefaultPartsService implements PartsService {
-
   constructor(
     @Inject(PARTS_DATA_SERVICE) private partsDataService: PartsDataService
   ) {}

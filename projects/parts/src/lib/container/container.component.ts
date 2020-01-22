@@ -14,7 +14,7 @@ import {
   Renderer2
 } from '@angular/core';
 import { Observable, of, Subscription, timer } from 'rxjs';
-import { flatMap, map, share } from 'rxjs/operators';
+import { flatMap, map, distinctUntilChanged } from 'rxjs/operators';
 import { v4 } from 'uuid';
 import { Part } from '../part';
 import { PartsEditService } from '../parts-edit.service';
@@ -36,18 +36,30 @@ export class ContainerComponent implements OnInit, OnDestroy {
 
   constructor(
     @Inject(PARTS_SERVICE) private partsService: PartsService,
-    partsEditService: PartsEditService,
+    private partsEditService: PartsEditService,
     private elRef: ElementRef<HTMLElement>,
     private renderer: Renderer2 // private dragDrop: DragDrop,
-  ) {
-    this.editingChanged = partsEditService.editingChanged.pipe(share());
+  ) {}
+
+  ngOnInit(): void {
+    this.editingChanged = this.partsEditService.editingChanged;
 
     this.partsChanged = this.partsService.partsChanged.pipe(
-      map(parts =>
-        parts
-          .filter(part => part.group === this.group)
-          .sort((a, b) => a.index - b.index)
-      )
+      map(parts => parts.filter(part => part.group === this.group)),
+      distinctUntilChanged((x, y) => {
+        if (x === y) {
+          return true;
+        }
+
+        if (!x || !y) {
+          return false;
+        }
+
+        return (
+          x.length === y.length && x.every((value, index) => value === y[index])
+        );
+      }),
+      map(parts => parts.sort((a, b) => a.index - b.index))
     );
 
     this.subscription.add(
@@ -109,9 +121,7 @@ export class ContainerComponent implements OnInit, OnDestroy {
     //     //this.dropList.withItems()
     //   })
     // );
-  }
 
-  ngOnInit(): void {
     this.renderer.addClass(this.elRef.nativeElement, 'part-list');
   }
 
@@ -133,13 +143,13 @@ export class ContainerComponent implements OnInit, OnDestroy {
         .filter(x => x.index !== x.part.index)
         .map(x => ({ ...x.part, index: x.index }));
 
-      let updatedParts: {
-          index: number;
-          id: string;
-          type: string;
-          group: string;
-          state: string;
-      }[];
+    let updatedParts: {
+      index: number;
+      id: string;
+      type: string;
+      group: string;
+      state: string;
+    }[];
     if (event.previousContainer === event.container) {
       if (event.currentIndex === event.previousIndex) {
         return;
@@ -174,9 +184,8 @@ export class ContainerComponent implements OnInit, OnDestroy {
       );
 
       updatedParts = updatedPartsContainsTransferredPart
-      ? updatedParts
-      : [...updatedParts, transferredPart];
-
+        ? updatedParts
+        : [...updatedParts, transferredPart];
     }
 
     this.partsService.update(updatedParts).subscribe();

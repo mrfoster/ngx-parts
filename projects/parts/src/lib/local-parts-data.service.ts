@@ -40,7 +40,9 @@ export class LocalPartsDataService implements PartsDataService {
       return of([]);
     }
     const all = JSON.parse(json) as Part[];
-    const parts = all.filter(part => groups.includes(part.group));
+    const parts = all
+      .filter(part => groups.includes(part.group))
+      .sort((a, b) => a.index - b.index);
     return of(parts);
   }
 }
