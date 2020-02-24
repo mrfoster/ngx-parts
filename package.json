@@ -38,7 +38,7 @@
     "uuid": "^3.3.2",
     "zone.js": "~0.10.0",
     "apollo-server": "^2.8.1",
-    "graphql": "^14.4.2"
+    "graphql": "^14.6.0"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.802.0",
