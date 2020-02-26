@@ -28,7 +28,7 @@
     "@ngrx/entity": "^8.2.0",
     "@ngrx/store": "^8.2.0",
     "@ngrx/store-devtools": "^8.2.0",
-    "@types/uuid": "^3.4.5",
+    "@types/uuid": "^7.0.0",
     "core-js": "^3.1.4",
     "ngrx-data": "^6.1.0-beta.3",
     "ngx-logger": "^4.0.3",
