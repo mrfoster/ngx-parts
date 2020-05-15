@@ -6,8 +6,8 @@
     "name": "Chris Foster"
   },
   "peerDependencies": {
-    "@angular/common": "^8.1.0",
-    "@angular/core": "^8.1.0",
+    "@angular/common": "^8.1.0 || ^9.0.0",
+    "@angular/core": "^8.1.0 || ^9.0.0",
     "@angular/cdk": "^8.1.0"
   }
 }
