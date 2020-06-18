@@ -8,81 +8,92 @@ import {
   PartsModule,
   PARTS_DATA_SERVICE,
   PARTS_SERVICE,
-  PART_REGISTRATIONS
+  PART_REGISTRATIONS,
 } from 'parts';
+import { AboutPageComponent } from './about-page/about-page.component';
 import { AddPartComponent } from './add-part/add-part.component';
+import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { HomePageComponent } from './home-page/home-page.component';
 import {
   ContentPartComponent,
-  ContentPartRegistration
+  ContentPartRegistration,
 } from './parts/content/content-part.component';
 import {
   IframePartComponent,
-  IframePartRegistration
+  IframePartRegistration,
 } from './parts/iframe/iframe-part.component';
 import {
   LayoutContainerPartComponent,
-  LayoutContainerPartRegistration
+  LayoutContainerPartRegistration,
 } from './parts/layout-container/layout-container-part.component';
 import {
   TestPartComponent,
-  TestPartRegistration
+  TestPartRegistration,
 } from './parts/test/test-part.component';
 import {
   TimerPartComponent,
-  TimerPartRegistration
+  TimerPartRegistration,
 } from './parts/timer/timer-part.component';
-import { AppRoutingModule } from './app-routing.module';
-import { HomePageComponent } from './home-page/home-page.component';
-import { AboutPageComponent } from './about-page/about-page.component';
 
 const parts = [
   ContentPartComponent,
   IframePartComponent,
   TimerPartComponent,
   TestPartComponent,
-  LayoutContainerPartComponent
+  LayoutContainerPartComponent,
 ];
 
 @NgModule({
-  declarations: [AppComponent, AddPartComponent, parts, HomePageComponent, AboutPageComponent],
-  entryComponents: parts,
-  imports: [BrowserModule, BrowserAnimationsModule, PartsModule, FormsModule, AppRoutingModule],
+  declarations: [
+    AppComponent,
+    AddPartComponent,
+    parts,
+    HomePageComponent,
+    AboutPageComponent,
+  ],
+  imports: [
+    BrowserModule,
+    BrowserAnimationsModule,
+    PartsModule,
+    FormsModule,
+    AppRoutingModule,
+  ],
   providers: [
     {
       provide: PARTS_SERVICE,
-      useClass: DefaultPartsService
+      useClass: DefaultPartsService,
     },
     {
       provide: PARTS_DATA_SERVICE,
-      useClass: LocalPartsDataService
+      useClass: LocalPartsDataService,
     },
     {
       provide: PART_REGISTRATIONS,
       useValue: ContentPartRegistration,
-      multi: true
+      multi: true,
     },
     {
       provide: PART_REGISTRATIONS,
       useValue: IframePartRegistration,
-      multi: true
+      multi: true,
     },
     {
       provide: PART_REGISTRATIONS,
       useValue: TimerPartRegistration,
-      multi: true
+      multi: true,
     },
     {
       provide: PART_REGISTRATIONS,
       useValue: TestPartRegistration,
-      multi: true
+      multi: true,
     },
     {
       provide: PART_REGISTRATIONS,
       useValue: LayoutContainerPartRegistration,
-      multi: true
-    }
+      multi: true,
+    },
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
 export class AppModule {}

@@ -6,7 +6,7 @@ import { Part } from './part';
 import {
   ChangeType,
   PartsDataService,
-  PARTS_DATA_SERVICE
+  PARTS_DATA_SERVICE,
 } from './parts-data.service';
 import { PartsService } from './parts.service';
 
@@ -40,11 +40,11 @@ export class DefaultPartsService implements PartsService {
         ? [
             {
               id: v4(),
-              group: group,
+              group,
               type: partOrType as string,
               state: state ? JSON.stringify(state) : null,
-              index: 0 // TODO: get index
-            }
+              index: 0, // TODO: get index
+            },
           ]
         : partOrType instanceof Array
         ? partOrType
@@ -52,10 +52,10 @@ export class DefaultPartsService implements PartsService {
 
     this.applyChanges([
       ...this._parts.values(),
-      ...parts.map(part => ({
+      ...parts.map((part) => ({
         changeType: ChangeType.Added,
-        value: part
-      }))
+        value: part,
+      })),
     ]);
 
     return of(isMany ? parts : parts[0]);
@@ -69,25 +69,25 @@ export class DefaultPartsService implements PartsService {
         ? [
             {
               ...this._parts.get(partsOrId).value,
-              state: state ? JSON.stringify(state) : undefined
-            }
+              state: state ? JSON.stringify(state) : undefined,
+            },
           ]
         : partsOrId;
 
-    const ids = new Set(parts.map(x => x.id));
+    const ids = new Set(parts.map((x) => x.id));
 
     this.applyChanges([
-      ...[...this._parts.values()].filter(x => !ids.has(x.value.id)),
+      ...[...this._parts.values()].filter((x) => !ids.has(x.value.id)),
       ...parts
-        .map(part => ({ part: part, change: this._parts.get(part.id) }))
-        .map(x => ({
+        .map((part) => ({ part, change: this._parts.get(part.id) }))
+        .map((x) => ({
           changeType:
             x.change.changeType === ChangeType.Unchanged
               ? ChangeType.Updated
               : x.change.changeType,
           value: x.part,
-          originalValue: x.change.originalValue
-        }))
+          originalValue: x.change.originalValue,
+        })),
     ]);
 
     return of(parts);
@@ -95,7 +95,7 @@ export class DefaultPartsService implements PartsService {
 
   delete(id: string): Observable<string> {
     const change = this._parts.get(id);
-    const changes = [...this._parts.values()].filter(x => x.value.id !== id);
+    const changes = [...this._parts.values()].filter((x) => x.value.id !== id);
 
     if (change.changeType === ChangeType.Added) {
       this.applyChanges(changes);
@@ -105,8 +105,8 @@ export class DefaultPartsService implements PartsService {
         {
           changeType: ChangeType.Deleted,
           value: { ...change.originalValue },
-          originalValue: change.originalValue
-        }
+          originalValue: change.originalValue,
+        },
       ]);
     }
 
@@ -116,11 +116,11 @@ export class DefaultPartsService implements PartsService {
   undo() {
     this.applyChanges(
       [...this._parts.values()]
-        .filter(change => change.changeType !== ChangeType.Added)
-        .map(change => ({
+        .filter((change) => change.changeType !== ChangeType.Added)
+        .map((change) => ({
           changeType: ChangeType.Unchanged,
           value: { ...change.originalValue },
-          originalValue: change.originalValue
+          originalValue: change.originalValue,
         }))
     );
   }
@@ -132,7 +132,7 @@ export class DefaultPartsService implements PartsService {
       .save(
         new Map(
           trackedValues.map(
-            x =>
+            (x) =>
               [x.value.id, { value: x.value, changeType: x.changeType }] as [
                 string,
                 { value: Part; changeType: ChangeType }
@@ -141,14 +141,14 @@ export class DefaultPartsService implements PartsService {
         )
       )
       .pipe(
-        map(parts => {
+        map((parts) => {
           this.applyChanges(
             trackedValues
-              .filter(change => change.changeType !== ChangeType.Deleted)
-              .map(change => ({
+              .filter((change) => change.changeType !== ChangeType.Deleted)
+              .map((change) => ({
                 changeType: ChangeType.Unchanged,
                 value: change.value,
-                originalValue: { ...change.value }
+                originalValue: { ...change.value },
               }))
           );
 
@@ -159,42 +159,42 @@ export class DefaultPartsService implements PartsService {
 
   load(groups: string[]): Observable<Part[]> {
     return this.partsDataService.load(groups).pipe(
-      map(parts => {
+      map((parts) => {
         this.applyChanges([
           ...[...this._parts.values()].filter(
-            x =>
+            (x) =>
               !(
                 groups.includes(x.value.group) &&
                 x.changeType === ChangeType.Unchanged
               )
           ),
           ...parts
-            .filter(x => {
+            .filter((x) => {
               const change = this._parts.get(x.id);
               return !change || change.changeType === ChangeType.Unchanged;
             })
-            .map(part => ({
+            .map((part) => ({
               originalValue: part,
               value: { ...part },
-              changeType: ChangeType.Unchanged
-            }))
+              changeType: ChangeType.Unchanged,
+            })),
         ]);
 
         return [...this._parts.values()]
-          .map(x => x.value)
-          .filter(x => groups.includes(x.group));
+          .map((x) => x.value)
+          .filter((x) => groups.includes(x.group));
       })
     );
   }
 
   private applyChanges(changeSet: PartChangeState[]) {
     this._parts = new Map(
-      changeSet.map(x => [x.value.id, x] as [string, ChangeState<Part>])
+      changeSet.map((x) => [x.value.id, x] as [string, ChangeState<Part>])
     );
     this._partsChanged.next(
       [...this._parts.values()]
-        .filter(change => change.changeType !== ChangeType.Deleted)
-        .map(change => change.value)
+        .filter((change) => change.changeType !== ChangeType.Deleted)
+        .map((change) => change.value)
     );
   }
 }

@@ -7,6 +7,6 @@ import { PartDirective } from './part.directive';
 @NgModule({
   declarations: [ContainerComponent, PartDirective],
   imports: [DragDropModule, CommonModule],
-  exports: [ContainerComponent, DragDropModule]
+  exports: [ContainerComponent, DragDropModule],
 })
 export class PartsModule {}

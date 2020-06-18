@@ -9,11 +9,7 @@ export interface PartsService {
   add(part: Part): Observable<Part>;
   add(parts: Part[]): Observable<Part[]>;
   add(type: string, group: string): Observable<Part>;
-  add<T>(
-    type: string,
-    group: string,
-    state: T
-  ): Observable<Part>;
+  add<T>(type: string, group: string, state: T): Observable<Part>;
 
   update<T>(id: string, state: T): Observable<Part[]>;
   update(parts: Part[]): Observable<Part[]>;
