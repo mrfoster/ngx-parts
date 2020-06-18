@@ -19,6 +19,6 @@ export const ContentPartRegistration: PartRegistration = {
   type: ContentPartComponent
 };
 
-export class ContentState {
+export interface ContentState {
   content: string;
 }
