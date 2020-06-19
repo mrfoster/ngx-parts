@@ -4,13 +4,13 @@ import {
   Input,
   OnDestroy,
   OnInit,
-  ViewContainerRef
+  ViewContainerRef,
 } from '@angular/core';
 import { Part } from './part';
 import { PartsFactory } from './parts-factory.service';
 
 @Directive({
-  selector: '[partPart]'
+  selector: '[partPart]',
 })
 export class PartDirective implements OnInit, OnDestroy {
   private componentRef: ComponentRef<any>;

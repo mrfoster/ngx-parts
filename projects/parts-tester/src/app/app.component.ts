@@ -1,4 +1,9 @@
-import { Component, Inject } from '@angular/core';
+import {
+  Component,
+  ComponentFactoryResolver,
+  Inject,
+  ViewContainerRef,
+} from '@angular/core';
 import { Part, PartsEditService, PartsService, PARTS_SERVICE } from 'parts';
 import { Observable } from 'rxjs';
 import { map, share } from 'rxjs/operators';
@@ -7,7 +12,7 @@ import { v4 } from 'uuid';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
   parts: Observable<Part[]>;
@@ -21,7 +26,7 @@ export class AppComponent {
       index: 0,
       state: `{
         "content": "<ul><li>Link 1</li><li>Link 2</li><li>Link 3</li></ul>"
-      }`
+      }`,
     },
     {
       id: '34bff13e-8c05-446c-b6bb-0fbf8b1e5d1b',
@@ -30,14 +35,14 @@ export class AppComponent {
       index: 0,
       state: `{
         "content": "<h1>Main</h1>"
-      }`
+      }`,
     },
     {
       id: 'e0b36189-6e97-4cf1-ac59-1e24826bde27',
       group: 'nav',
       type: 'app-timer-part',
       index: 0,
-      state: null
+      state: null,
     },
     {
       id: 'd59f4f82-b15d-4eb9-b371-f8ff0e47f85b',
@@ -47,7 +52,7 @@ export class AppComponent {
       state: `{
         "title": "Title",
         "subTitle": "Sub Title"
-      }`
+      }`,
     },
     {
       id: 'c6e07357-87eb-4d75-9ba6-d5eae877f18f',
@@ -56,7 +61,7 @@ export class AppComponent {
       index: 0,
       state: `{
         "content": "<p>aside...</p>"
-      }`
+      }`,
     },
     {
       id: 'a0fb5f73-c032-4a14-8eee-f369d5399eca',
@@ -65,8 +70,8 @@ export class AppComponent {
       index: 0,
       state: `{
         "content": "<ul><li>Item 1</li><li>Item 2</li><li>Item 3</li></ul>"
-      }`
-    }
+      }`,
+    },
   ].reduce((a, b) => {
     (a[b.group] = a[b.group] || []).push(b);
     return a;
@@ -74,11 +79,16 @@ export class AppComponent {
 
   constructor(
     @Inject(PARTS_SERVICE) private partsService: PartsService,
-    private partsEditService: PartsEditService
+    private partsEditService: PartsEditService,
+    private viewContainerRef: ViewContainerRef,
+    private cfr: ComponentFactoryResolver
   ) {
     this.parts = partsService.partsChanged.pipe(
-      map(parts => {
-        return parts.map(part => ({ ...part, state: JSON.parse(part.state) }));
+      map((parts) => {
+        return parts.map((part) => ({
+          ...part,
+          state: JSON.parse(part.state),
+        }));
       }),
       share()
     );
@@ -95,7 +105,7 @@ export class AppComponent {
         index: 0,
         state: `{
         "content": "<h1>Test</h1>"
-      }`
+      }`,
       })
       .subscribe();
   }
@@ -107,7 +117,7 @@ export class AppComponent {
         group: 'aside',
         type: 'app-timer-part',
         index: 0,
-        state: ''
+        state: '',
       })
       .subscribe();
   }

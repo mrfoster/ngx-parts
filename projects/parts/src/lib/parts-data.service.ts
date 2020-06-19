@@ -9,7 +9,7 @@ export enum ChangeType {
   Unchanged,
   Added,
   Updated,
-  Deleted
+  Deleted,
 }
 
 export interface PartsDataService {

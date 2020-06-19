@@ -2,7 +2,7 @@ import {
   CdkDragDrop,
   DropListRef,
   moveItemInArray,
-  transferArrayItem
+  transferArrayItem,
 } from '@angular/cdk/drag-drop';
 import {
   Component,
@@ -11,10 +11,10 @@ import {
   Input,
   OnDestroy,
   OnInit,
-  Renderer2
+  Renderer2,
 } from '@angular/core';
 import { Observable, of, Subscription, timer } from 'rxjs';
-import { flatMap, map, distinctUntilChanged } from 'rxjs/operators';
+import { distinctUntilChanged, flatMap, map } from 'rxjs/operators';
 import { v4 } from 'uuid';
 import { Part } from '../part';
 import { PartsEditService } from '../parts-edit.service';
@@ -23,7 +23,7 @@ import { PartsService, PARTS_SERVICE } from '../parts.service';
 @Component({
   selector: 'part-container,[partContainer]',
   templateUrl: './container.component.html',
-  styleUrls: ['./container.component.scss']
+  styleUrls: ['./container.component.scss'],
 })
 export class ContainerComponent implements OnInit, OnDestroy {
   @Input() group: string;
@@ -45,7 +45,7 @@ export class ContainerComponent implements OnInit, OnDestroy {
     this.editingChanged = this.partsEditService.editingChanged;
 
     this.partsChanged = this.partsService.partsChanged.pipe(
-      map(parts => parts.filter(part => part.group === this.group)),
+      map((parts) => parts.filter((part) => part.group === this.group)),
       distinctUntilChanged((x, y) => {
         if (x === y) {
           return true;
@@ -59,14 +59,14 @@ export class ContainerComponent implements OnInit, OnDestroy {
           x.length === y.length && x.every((value, index) => value === y[index])
         );
       }),
-      map(parts => parts.sort((a, b) => a.index - b.index))
+      map((parts) => parts.sort((a, b) => a.index - b.index))
     );
 
     this.subscription.add(
       timer(0)
         .pipe(
-          flatMap(x => this.partsService.load([this.group])),
-          flatMap(parts => {
+          flatMap((x) => this.partsService.load([this.group])),
+          flatMap((parts) => {
             if (parts && parts.length) {
               return of(parts);
             }
@@ -80,15 +80,15 @@ export class ContainerComponent implements OnInit, OnDestroy {
                 ...part,
                 id: part.id || v4(),
                 index: i,
-                group: this.group
+                group: this.group,
               })),
               {
                 id: v4(),
                 index: 0,
                 state: null,
                 type: 'init-marker',
-                group: this.group
-              }
+                group: this.group,
+              },
             ]);
           })
         )
@@ -132,16 +132,16 @@ export class ContainerComponent implements OnInit, OnDestroy {
     }
   }
 
-  trackById(_index: any, item: Part) {
+  trackById(index: any, item: Part) {
     return item.id;
   }
 
   drop(event: CdkDragDrop<Part[]>) {
     const updatePartIndexes = (parts: Part[]) =>
       parts
-        .map((part, index) => ({ part: part, index: index }))
-        .filter(x => x.index !== x.part.index)
-        .map(x => ({ ...x.part, index: x.index }));
+        .map((part, index) => ({ part, index }))
+        .filter((x) => x.index !== x.part.index)
+        .map((x) => ({ ...x.part, index: x.index }));
 
     let updatedParts: {
       index: number;
@@ -176,11 +176,11 @@ export class ContainerComponent implements OnInit, OnDestroy {
 
       updatedParts = [
         ...updatePartIndexes(event.container.data),
-        ...updatePartIndexes(event.previousContainer.data)
+        ...updatePartIndexes(event.previousContainer.data),
       ];
 
       const updatedPartsContainsTransferredPart = updatedParts.find(
-        x => x.id === transferredPart.id
+        (x) => x.id === transferredPart.id
       );
 
       updatedParts = updatedPartsContainsTransferredPart

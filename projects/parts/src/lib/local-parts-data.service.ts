@@ -12,22 +12,22 @@ export class LocalPartsDataService implements PartsDataService {
     const changeValues = [...changeSet.values()];
     const addedOrUpdated = changeValues
       .filter(
-        x =>
+        (x) =>
           x.changeType === ChangeType.Added ||
           x.changeType === ChangeType.Updated
       )
-      .map(x => x.value);
+      .map((x) => x.value);
 
     const deleted = changeValues
-      .filter(x => x.changeType === ChangeType.Deleted)
-      .map(x => x.value);
+      .filter((x) => x.changeType === ChangeType.Deleted)
+      .map((x) => x.value);
 
     const json = localStorage.getItem(this.cacheKey);
     const all = !json ? [] : (JSON.parse(json) as Part[]);
-    const map = new Map(all.map(part => [part.id, part] as [string, Part]));
+    const map = new Map(all.map((part) => [part.id, part] as [string, Part]));
 
-    addedOrUpdated.forEach(part => map.set(part.id, part));
-    deleted.forEach(part => map.delete(part.id));
+    addedOrUpdated.forEach((part) => map.set(part.id, part));
+    deleted.forEach((part) => map.delete(part.id));
 
     localStorage.setItem(this.cacheKey, JSON.stringify([...map.values()]));
 
@@ -41,7 +41,7 @@ export class LocalPartsDataService implements PartsDataService {
     }
     const all = JSON.parse(json) as Part[];
     const parts = all
-      .filter(part => groups.includes(part.group))
+      .filter((part) => groups.includes(part.group))
       .sort((a, b) => a.index - b.index);
     return of(parts);
   }

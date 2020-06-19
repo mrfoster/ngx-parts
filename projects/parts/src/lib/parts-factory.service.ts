@@ -4,13 +4,13 @@ import {
   ComponentRef,
   Inject,
   Injectable,
-  ViewContainerRef
+  ViewContainerRef,
 } from '@angular/core';
 import { Part } from './part';
 import { PartRegistration, PART_REGISTRATIONS } from './part-registration';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class PartsFactory {
   private partsFactory: { [type: string]: ComponentFactory<any> };

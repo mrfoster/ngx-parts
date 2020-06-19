@@ -1,3 +1,9 @@
 {
-    "workbench.colorCustomizations": {}
+  "editor.formatOnSave": true,
+  "html.format.enable": true,
+  "html.format.indentHandlebars": true,
+  "html.format.maxPreserveNewLines": 0,
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": true
+  }
 }
